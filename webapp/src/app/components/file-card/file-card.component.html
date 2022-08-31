@@ -1,0 +1,13 @@
+<div class="card">
+    <img *ngIf="image" class="card-img-top" [src]="image" alt="Card image cap">
+    <div *ngIf="!image" class="card-img-top no-image" >
+        No Image Found
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ file.filename }}</h5>
+        <p class="card-text d-flex justify-content-between">
+            <small class="text-muted">Dauer: {{ file.estimatedPrintingTimeNormalMode }}</small>
+            <small class="text-muted">Material: {{ file.options.filament_type }}</small>
+        </p>        
+    </div>
+</div>

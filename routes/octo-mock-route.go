@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/maker-space-experiemnta/printer-kiosk/util"
+	"github.com/maker-space-experimenta/printer-kiosk/util"
 )
 
 type OctoMockResponse struct {

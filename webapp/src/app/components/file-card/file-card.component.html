@@ -1,6 +1,6 @@
 <div class="card">
     <img *ngIf="image" class="card-img-top" [src]="image" alt="Card image cap">
-    <div *ngIf="!image" class="card-img-top no-image" >
+    <div *ngIf="!image || image == ''" class="card-img-top no-image" >
         No Image Found
     </div>
     <div class="card-body">

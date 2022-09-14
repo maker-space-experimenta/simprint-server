@@ -1,8 +1,6 @@
 package routes
 
 import (
-	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -17,21 +15,10 @@ func NewMetricsHandler() *MetricsHandler {
 	return &MetricsHandler{}
 }
 
-func (m *MetricsHandler) GetMetrics(w http.ResponseWriter, r *http.Request) {
-
-	resp := MetricResponse{
-		Printers: 2,
-	}
-
-	jsonResp, err := json.Marshal(resp)
-	if err != nil {
-		log.Fatalf("Error happened in JSOn marshal. Err %s", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write(nil)
-		return
-	}
+func (m *MetricsHandler) GetCycleSpeed(w http.ResponseWriter, r *http.Request) {
+	b := []byte("{ content: \"test\" }")
 
 	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(jsonResp)
+	w.Header().Set("Content-Type", "application/json;charset=utf-8")
+	w.Write(b)
 }

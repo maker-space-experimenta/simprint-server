@@ -10,6 +10,8 @@ type Config struct {
 	Port                      string `mapstructure:"PORT"`
 	TempFileDir               string `mapstructure:"TEMPDIR"`
 	FileDeleteDurationMinutes int    `mapstructure:"FILE_DELETE_DURATION_MINUTES"`
+	Printers                  string `mapstructure:"PRINTERS"`
+	TaskRunnerDuration        int    `mapstructure:"TASKRUNNER_DURATION"`
 
 	DBDriver      string `mapstructure:"DB_DRIVER"`
 	DBSource      string `mapstructure:"DB_SOURCE"`

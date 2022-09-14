@@ -1,4 +1,4 @@
-module github.com/maker-space-experiemnta/printer-kiosk
+module github.com/maker-space-experimenta/printer-kiosk
 
 go 1.19
 

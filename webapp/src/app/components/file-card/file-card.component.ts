@@ -21,8 +21,9 @@ export class FileCardComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.file);
 
-    this.image = "data:image/png;base64," + this.file.image;    
-
+    if (this.file.image && this.file.image != "") {
+      this.image = "data:image/png;base64," + this.file.image;    
+    }
   }
 
 }

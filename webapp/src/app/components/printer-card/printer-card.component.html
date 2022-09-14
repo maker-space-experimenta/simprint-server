@@ -1,0 +1,10 @@
+<div class="card">
+    <img *ngIf="printer.model == 'Prusa i3mk3s'" class="card-img-top no-image" src="./../../../assets/i3mk3s.jpg">
+    <div class="card-body">
+        <h5 class="card-title">{{ printer.name }}</h5>
+        <p class="card-text d-flex justify-content-between">
+            <small class="text-muted">Model: {{ printer.model }}</small>
+            <small class="text-muted">State: {{ printer.state }}</small>
+        </p>        
+    </div>
+</div>

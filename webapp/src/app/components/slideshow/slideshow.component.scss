@@ -1,0 +1,28 @@
+.background {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.background-image {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-height: 70vh;
+    width: 100vw;
+}
+
+.content {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 65vw;
+    height: 25vh;
+    margin-top: 5vh;
+}
+
+h1 {
+    text-transform: uppercase;
+}

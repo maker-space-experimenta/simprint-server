@@ -1,13 +1,16 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 // import { GCodeRenderer, Color, SpeedColorizer } from 'gcode-viewer';
+import {QRCode } from 'qrcode'
 
 @Component({
   selector: 'app-files',
   templateUrl: './files.component.html',
   styleUrls: ['./files.component.scss']
 })
-export class FilesComponent implements OnInit {
+export class FilesComponent implements OnInit, AfterViewInit {
+
+  @ViewChild('qrCodeCanvas')qrCodeCanvas: ElementRef | undefined;
 
   files: any[] = [];
 
@@ -17,16 +20,25 @@ export class FilesComponent implements OnInit {
 
   updateFiles() {
     this.http.get("http://localhost:5000/api/files/local").subscribe((files: any) => {
-      console.log(files)
-      this.files = files;
-
+      if (files) {
+        console.log(files)
+        this.files = files.data;
+      }
     });
   }
 
   ngOnInit(): void {
-    
     this.updateFiles();
     setInterval(() => this.updateFiles(), 10000)
+  }
+
+  ngAfterViewInit(): void {
+
+    // QRCode
+
+    // QRCode.toCanvas(this.qrCodeCanvas, 'sample text', (err: any) => {
+    //   console.log(err);
+    // })
   }
 
 }

@@ -6,9 +6,10 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/maker-space-experiemnta/printer-kiosk/middlewares"
-	"github.com/maker-space-experiemnta/printer-kiosk/routes"
-	"github.com/maker-space-experiemnta/printer-kiosk/util"
+	"github.com/maker-space-experimenta/printer-kiosk/middlewares"
+	"github.com/maker-space-experimenta/printer-kiosk/repositories"
+	"github.com/maker-space-experimenta/printer-kiosk/routes"
+	"github.com/maker-space-experimenta/printer-kiosk/util"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/urfave/negroni"
 )
@@ -29,6 +30,9 @@ func main() {
 		log.Fatal("cannot load config:", err)
 	}
 
+	printerRepository := repositories.NewPrinterRepository(config)
+	filesRepository := repositories.NewFileRepository(config)
+
 	log.Println("config loaded")
 	log.Print(config)
 	log.Println("")
@@ -37,19 +41,26 @@ func main() {
 
 	// ordersRepo := toolbox_repositories.OrderRepo{}
 
-	filesHandler := routes.NewFilesHandler(config)
+	metricsHandler := routes.NewMetricsHandler()
+	printHandler := routes.NewPrintHandler(config)
+	printersHandler := routes.NewPrintersHandler(config)
+	filesHandler := routes.NewFilesHandler(config, *filesRepository)
 	octoMockHandler := routes.NewOctoMockHandler(config)
-
-	// router.Path("/metrics").Methods("GET").HandlerFunc(toolbox_routes.GetMetrics)
+	spaHandler := routes.NewSpaHandler(config, "static", "index.html")
 
 	router.Path("/api/version").Methods("GET").HandlerFunc(octoMockHandler.GetVersionOctoMock)
 
 	router.Path("/api/files/{location}").Methods("GET").HandlerFunc(filesHandler.GetFiles)
 	router.Path("/api/files/{location}").Methods("POST").HandlerFunc(filesHandler.PostFiles)
 
-	router.Path("/api/readfile/{filename}").Methods("GET").HandlerFunc(filesHandler.ReadFile)
+	router.Path("/api/printers").Methods("GET").HandlerFunc(printersHandler.GetPrinters)
+
+	router.Path("/api/print").Methods("POST").HandlerFunc(printHandler.PostPrint)
 
 	router.Path("/metrics").Handler(promhttp.Handler())
+	router.Path("/api/metrics/speed").HandlerFunc(metricsHandler.GetCycleSpeed)
+
+	router.PathPrefix("/").Handler(spaHandler)
 
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 
@@ -62,6 +73,12 @@ func main() {
 	n.UseHandler(router)
 
 	log.Printf("starting server on port %v", config.Port)
+
+	taskRunner := util.NewTaskRunner(config)
+	taskRunner.AddTask(printerRepository.UpdatePrinters)
+	taskRunner.AddTask(filesRepository.UpdateFiles)
+
+	taskRunner.Start()
 
 	//start and listen to requests
 	http.ListenAndServe(fmt.Sprintf(":%v", config.Port), n)

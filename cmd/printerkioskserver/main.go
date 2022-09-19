@@ -6,10 +6,10 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/maker-space-experimenta/printer-kiosk/middlewares"
-	"github.com/maker-space-experimenta/printer-kiosk/repositories"
-	"github.com/maker-space-experimenta/printer-kiosk/routes"
-	"github.com/maker-space-experimenta/printer-kiosk/util"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/middlewares"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/repositories"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/routes"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/util"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/urfave/negroni"
 )

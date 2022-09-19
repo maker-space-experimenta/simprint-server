@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/maker-space-experimenta/printer-kiosk/util"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/util"
 )
 
 type SpaHandler struct {

@@ -11,7 +11,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/maker-space-experimenta/printer-kiosk/util"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/util"
 )
 
 func GCodeToMap(gcode string) (map[string]string, error) {

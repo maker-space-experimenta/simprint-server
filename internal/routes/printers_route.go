@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/maker-space-experimenta/printer-kiosk/repositories"
-	"github.com/maker-space-experimenta/printer-kiosk/util"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/repositories"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/util"
 )
 
 type PrintersHandler struct {

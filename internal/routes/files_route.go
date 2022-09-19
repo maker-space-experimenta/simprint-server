@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/maker-space-experimenta/printer-kiosk/models"
-	"github.com/maker-space-experimenta/printer-kiosk/repositories"
-	"github.com/maker-space-experimenta/printer-kiosk/util"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/models"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/repositories"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/util"
 )
 
 type FilesApiResponse struct {

@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/maker-space-experimenta/printer-kiosk/helper"
-	"github.com/maker-space-experimenta/printer-kiosk/models"
-	"github.com/maker-space-experimenta/printer-kiosk/util"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/helper"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/models"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/util"
 )
 
 type FileRepository struct {

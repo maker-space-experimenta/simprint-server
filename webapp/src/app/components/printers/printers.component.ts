@@ -19,7 +19,7 @@ export class PrintersComponent implements OnInit {
 
   ngOnInit(): void {
     this.http.get("http://localhost:5000/api/printers").subscribe((printers: any) => {
-      console.log(printers)
+      console.log("printers", printers)
       this.printers = printers;
     });
 

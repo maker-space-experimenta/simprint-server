@@ -1,1 +1,1 @@
-nodemon --watch './**/*.go' --signal SIGTERM --exec 'go' run -tags netgo ./cmd/printerkioskserver/main.go
+nodemon --watch './**/*.go' --signal SIGTERM --exec 'go' run -tags netgo ./cmd/makerspace_printer_kiosk/main.go

@@ -19,7 +19,7 @@ export class FilesComponent implements OnInit, AfterViewInit {
   ) { }
 
   updateFiles() {
-    this.http.get("http://localhost:5000/api/files/local").subscribe((files: any) => {
+    this.http.get("http://172.18.5.196:5000/api/files/local").subscribe((files: any) => {
       if (files) {
         console.log(files)
         this.files = files.data;

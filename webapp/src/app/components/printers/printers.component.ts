@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-printers',
@@ -14,11 +14,12 @@ export class PrintersComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
     ) { }
 
   ngOnInit(): void {
-    this.http.get("http://localhost:5000/api/printers").subscribe((printers: any) => {
+    this.http.get("http://172.18.5.196:5000/api/printers").subscribe((printers: any) => {
       console.log("printers", printers)
       this.printers = printers;
     });
@@ -34,11 +35,12 @@ export class PrintersComponent implements OnInit {
   print(printer: any) {
     let data = {
       file: this.filename,
-      printer: printer.url
+      printer: printer.hostname
     };
 
-    this.http.post("http://localhost:5000/api/print",  data).subscribe(m => {
+    this.http.post("http://172.18.5.196:5000/api/jobs",  data).subscribe(m => {
       console.log(m);
+      this.router.navigate(["/"]);
     });
   }
 

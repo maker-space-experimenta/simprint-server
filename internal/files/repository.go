@@ -5,16 +5,19 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/configuration"
 )
 
 type IFileRepository interface {
 }
 
 type FileRepository struct {
-	// config util.Config
+	config         configuration.Config
 	Files          []PrusaSlicerGcodeMetaData
 	DeleteDuration int
 }
@@ -22,12 +25,15 @@ type FileRepository struct {
 var fileRepoLock = &sync.Mutex{}
 var fileRepoInstance *FileRepository
 
-func NewFileRepository() *FileRepository {
+func NewFileRepository(config configuration.Config) *FileRepository {
 	if fileRepoInstance == nil {
 		fileRepoLock.Lock()
 
 		if fileRepoInstance == nil {
-			fileRepoInstance = &FileRepository{}
+			fileRepoInstance = &FileRepository{
+				config:         config,
+				DeleteDuration: config.Files.DeleteDuration,
+			}
 		}
 	}
 
@@ -39,7 +45,7 @@ func (m *FileRepository) UpdateFiles() {
 	var filesList []PrusaSlicerGcodeMetaData
 	filesDeleted := 0
 
-	dirName := "" // m.config.Files.TempDir
+	dirName := path.Join(m.config.Files.TempDir, "gcode")
 
 	err := os.MkdirAll(dirName, os.ModePerm)
 	if err != nil {

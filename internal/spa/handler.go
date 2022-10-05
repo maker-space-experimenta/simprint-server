@@ -1,20 +1,20 @@
-package routes
+package spa
 
 import (
 	"net/http"
 	"os"
 	"path/filepath"
 
-	"github.com/maker-space-experimenta/printer-kiosk/internal/util"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/configuration"
 )
 
 type SpaHandler struct {
-	config     util.Config
+	config     configuration.Config
 	staticPath string
 	indexPath  string
 }
 
-func NewSpaHandler(config util.Config, staticPath string, indexPath string) *SpaHandler {
+func NewSpaHandler(config configuration.Config, staticPath string, indexPath string) *SpaHandler {
 	return &SpaHandler{
 		staticPath: staticPath,
 		indexPath:  indexPath,

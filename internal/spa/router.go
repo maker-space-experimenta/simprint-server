@@ -1,4 +1,4 @@
-package files
+package spa
 
 import (
 	"log"
@@ -15,8 +15,6 @@ func AddRoutes(router *mux.Router) {
 		log.Fatal("cannot load config:", err)
 	}
 
-	filesHandler := NewFilesHandler(*config)
-
-	router.Path("/api/files/{location}").Methods("GET").HandlerFunc(filesHandler.GetFiles)
-	router.Path("/api/files/{location}").Methods("POST").HandlerFunc(filesHandler.PostFiles)
+	spaHandler := NewSpaHandler(*config, "static", "index.html")
+	router.PathPrefix("/").Handler(spaHandler)
 }

@@ -1,4 +1,4 @@
-package files
+package slicer
 
 import (
 	"log"
@@ -12,11 +12,11 @@ func AddRoutes(router *mux.Router) {
 	configService := configuration.NewConfigService()
 	config, err := configService.GetConfig()
 	if err != nil {
-		log.Fatal("cannot load config:", err)
+		log.Printf("FATAL: cannot load config: %v", err)
 	}
 
-	filesHandler := NewFilesHandler(*config)
+	printersHandler := NewSlicerHandler(*config)
 
-	router.Path("/api/files/{location}").Methods("GET").HandlerFunc(filesHandler.GetFiles)
-	router.Path("/api/files/{location}").Methods("POST").HandlerFunc(filesHandler.PostFiles)
+	router.Path("/api/slicer/jobs").Methods("GET").HandlerFunc(printersHandler.GetJobs)
+	router.Path("/api/slicer").Methods("POST").HandlerFunc(printersHandler.PostSlicejob)
 }

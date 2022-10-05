@@ -10,11 +10,12 @@ tasks:
   duration: 5
 
 printers:
-  - host: octopi-prusa-001
+  octopi-prusa-001:
+    host: octopi-prusa-001
     key: F84833BA940E49648F606EA561E97783
-  - host: octopi-prusa-002
+  octopi-prusa-002:
+    host: octopi-prusa-002
     key: F84833BA940E49648F606EA561E97783
-#PRINTERS=http://172.18.4.14/api,F84833BA940E49648F606EA561E97783;http://octopi-prusa-002.local/api,F84833BA940E49648F606EA561E97783
 
 # OAUTH_CLIENT_ID=makerspace_printer_kiosk
 # OAUTH_CLIENT_SECRET=EBPNkvB9Yc4JhLT4vDqu94OkwNmd5L8W

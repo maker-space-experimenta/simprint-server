@@ -1,11 +1,5 @@
 package configuration
 
-import (
-	"os"
-
-	"gopkg.in/yaml.v2"
-)
-
 type Config struct {
 	Server struct {
 		Port string `yaml:"port"`
@@ -20,7 +14,7 @@ type Config struct {
 		Duration int `yaml:"duration"`
 	} `yaml:"tasks"`
 
-	Printers []struct {
+	Printers map[string]struct {
 		Host string `yaml:"host"`
 		Key  string `yaml:"key"`
 	} `yaml:"printers"`
@@ -35,25 +29,4 @@ type Config struct {
 		ClientId     string `yaml:"client_id"`
 		ClientSecret string `yaml:"client_secret"`
 	} `yaml:"oauth"`
-}
-
-func LoadConfig(configPath string) (*Config, error) {
-
-	config := &Config{}
-
-	file, err := os.Open(configPath)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	// Init new YAML decode
-	d := yaml.NewDecoder(file)
-
-	// Start YAML decoding from file
-	if err := d.Decode(&config); err != nil {
-		return nil, err
-	}
-
-	return config, nil
 }

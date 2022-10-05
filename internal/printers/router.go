@@ -1,4 +1,4 @@
-package files
+package printers
 
 import (
 	"log"
@@ -12,11 +12,10 @@ func AddRoutes(router *mux.Router) {
 	configService := configuration.NewConfigService()
 	config, err := configService.GetConfig()
 	if err != nil {
-		log.Fatal("cannot load config:", err)
+		log.Printf("FATAL: cannot load config: %v", err)
 	}
 
-	filesHandler := NewFilesHandler(*config)
+	printersHandler := NewPrintersHandler(*config)
 
-	router.Path("/api/files/{location}").Methods("GET").HandlerFunc(filesHandler.GetFiles)
-	router.Path("/api/files/{location}").Methods("POST").HandlerFunc(filesHandler.PostFiles)
+	router.Path("/api/printers").Methods("GET").HandlerFunc(printersHandler.GetPrinters)
 }

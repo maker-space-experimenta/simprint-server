@@ -2,13 +2,13 @@ package files
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
-	"os"
+	"path"
 
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/configuration"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/helper"
 )
 
 type FilesApiResponse struct {
@@ -24,7 +24,7 @@ type FilesHandler struct {
 func NewFilesHandler(config configuration.Config) *FilesHandler {
 	return &FilesHandler{
 		config:   config,
-		fileRepo: NewFileRepository(),
+		fileRepo: NewFileRepository(config),
 	}
 }
 
@@ -58,28 +58,13 @@ func (m *FilesHandler) GetFiles(w http.ResponseWriter, r *http.Request) {
 func (m *FilesHandler) PostFiles(w http.ResponseWriter, r *http.Request) {
 	log.Printf("enter files route endpoint PostFile for " + string(r.URL.Path))
 
-	file, handler, err := r.FormFile("file")
+	filepath, err := helper.SaveFileFromForm(r, "file", path.Join(m.config.Files.TempDir, "gcode"), "sliced.gcode")
 	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	dirName := m.config.Files.TempDir
-
-	err = os.MkdirAll(dirName, os.ModePerm)
-	if err != nil {
-		panic(err)
+		log.Printf("FATAL: could not load and save file, %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(nil)
+		return
 	}
 
-	url := fmt.Sprintf("%v/%v", dirName, handler.Filename)
-	log.Printf(url)
-
-	f, err := os.OpenFile(url, os.O_WRONLY|os.O_CREATE, 0666)
-	if err != nil {
-		panic(err)
-	}
-
-	defer f.Close()
-	_, _ = io.WriteString(w, "File "+url+" Uploaded successfully")
-	_, _ = io.Copy(f, file)
+	_, _ = io.WriteString(w, "File "+filepath+" Uploaded successfully")
 }

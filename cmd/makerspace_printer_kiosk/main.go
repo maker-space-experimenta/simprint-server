@@ -12,6 +12,10 @@ import (
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/configuration"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/middlewares"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/tasks"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/jobs"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/octomock"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/slicer"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/spa"
 
 	"github.com/maker-space-experimenta/printer-kiosk/internal/files"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/printers"
@@ -19,7 +23,7 @@ import (
 
 func notFound(w http.ResponseWriter, r *http.Request) {
 
-	log.Fatalf("not found: %v ", r.URL)
+	log.Printf("not found: %v ", r.URL)
 
 	w.WriteHeader(http.StatusNotFound)
 	w.Header().Set("Content-Type", "text")
@@ -28,13 +32,19 @@ func notFound(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-	config, err := configuration.LoadConfig("./config.yml")
+	configService := configuration.NewConfigService()
+	err := configService.LoadConfig("./config.yml")
+	if err != nil {
+		log.Fatal("cannot load config:", err)
+	}
+
+	config, err := configService.GetConfig()
 	if err != nil {
 		log.Fatal("cannot load config:", err)
 	}
 
 	printerRepository := printers.NewPrinterRepository(*config)
-	filesRepository := files.NewFileRepository()
+	filesRepository := files.NewFileRepository(*config)
 
 	log.Println("config loaded")
 	log.Print(config)
@@ -42,33 +52,15 @@ func main() {
 
 	router := mux.NewRouter()
 
-	// files_handlers.NewFilesHandler
-
-	printersHandler := printers.NewPrintersHandler(*config)
-	// printHandler := internal.printers routes.NewPrintHandler(*config)
-	// printersHandler := routes.NewPrintersHandler(*config)
-	// filesHandler := routes.NewFilesHandler(*config)
-	// octoMockHandler := routes.NewOctoMockHandler(*config)
-	// spaHandler := routes.NewSpaHandler(*config, "static", "index.html")
-
-	// router.Path("/api/version").Methods("GET").HandlerFunc(octoMockHandler.GetVersionOctoMock)
-
-	// router.Path("/api/files/{location}").Methods("GET").HandlerFunc(filesHandler.GetFiles)
-	// router.Path("/api/files/{location}").Methods("POST").HandlerFunc(filesHandler.PostFiles)
-
-	router.Path("/api/printers").Methods("GET").HandlerFunc(printersHandler.GetPrinters)
-
+	octomock.AddRoutes(router)
 	files.AddRoutes(router)
-
-	// router.Path("/api/print").Methods("POST").HandlerFunc(printHandler.PostPrint)
+	printers.AddRoutes(router)
+	jobs.AddRoutes(router)
+	slicer.AddRoutes(router)
+	spa.AddRoutes(router)
 
 	router.Path("/metrics").Handler(promhttp.Handler())
-
-	// router.PathPrefix("/").Handler(spaHandler)
-
 	router.NotFoundHandler = http.HandlerFunc(notFound)
-
-	// http.Handle("/", router)
 
 	n := negroni.New()
 	n.Use(&middlewares.CorsMiddleware{})

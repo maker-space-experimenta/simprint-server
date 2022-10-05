@@ -10,13 +10,13 @@ import (
 
 type PrintersHandler struct {
 	config      configuration.Config
-	printerRepo PrinterRepository
+	printerRepo *PrinterRepository
 }
 
 func NewPrintersHandler(config configuration.Config) *PrintersHandler {
 	return &PrintersHandler{
 		config:      config,
-		printerRepo: *NewPrinterRepository(config),
+		printerRepo: NewPrinterRepository(config),
 	}
 }
 

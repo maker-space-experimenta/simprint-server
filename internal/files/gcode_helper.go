@@ -44,7 +44,8 @@ func GCodeToMap(gcode string) (map[string]string, error) {
 }
 
 func GCodeToImage(path string) {
-	config, err := configuration.LoadConfig(".")
+	configService := configuration.NewConfigService()
+	config, err := configService.GetConfig()
 	if err != nil {
 		log.Fatal("cannot load config:", err)
 	}

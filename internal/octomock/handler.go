@@ -1,21 +1,21 @@
-package routes
+package octomock
 
 import (
 	"encoding/json"
 	"log"
 	"net/http"
 
-	"github.com/maker-space-experimenta/printer-kiosk/internal/util"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/configuration"
 )
 
 type OctoMockResponse struct {
 }
 
 type OctoMockHandler struct {
-	config util.Config
+	config configuration.Config
 }
 
-func NewOctoMockHandler(config util.Config) *OctoMockHandler {
+func NewOctoMockHandler(config configuration.Config) *OctoMockHandler {
 	return &OctoMockHandler{
 		config: config,
 	}

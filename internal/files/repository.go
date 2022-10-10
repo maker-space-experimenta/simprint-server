@@ -3,7 +3,6 @@ package files
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path"
 	"strings"
@@ -11,6 +10,7 @@ import (
 	"time"
 
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/configuration"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 )
 
 type IFileRepository interface {
@@ -20,6 +20,7 @@ type FileRepository struct {
 	config         configuration.Config
 	Files          []PrusaSlicerGcodeMetaData
 	DeleteDuration int
+	logger         *logging.Logger
 }
 
 var fileRepoLock = &sync.Mutex{}
@@ -33,6 +34,7 @@ func NewFileRepository(config configuration.Config) *FileRepository {
 			fileRepoInstance = &FileRepository{
 				config:         config,
 				DeleteDuration: config.Files.DeleteDuration,
+				logger:         logging.NewLogger(),
 			}
 		}
 	}
@@ -54,31 +56,31 @@ func (m *FileRepository) UpdateFiles() {
 
 	files, err := ioutil.ReadDir(dirName)
 	if err != nil {
-		log.Fatal(err)
+		m.logger.Errorf("%v", err)
 	}
 
 	for _, file := range files {
-		// log.Printf("found file %v", file.Name())
+		m.logger.Debugf("found file %v", file.Name())
 
 		if file.ModTime().Before((time.Now().Add(time.Duration((m.DeleteDuration * -1)) * time.Minute))) {
 			filesDeleted++
-			// log.Printf("File %v is outdated and will be deleted", file.Name())
+			m.logger.Debugf("File %v is outdated and will be deleted", file.Name())
 			e := os.Remove(fmt.Sprintf("%v/%v", dirName, file.Name()))
 			if e != nil {
-				log.Fatal(e)
+				m.logger.Errorf("%v", e)
 			}
 		} else {
 
 			fileBytes, err := ioutil.ReadFile(fmt.Sprintf("%v/%v", dirName, file.Name()))
 			if err != nil {
-				log.Fatal(err)
+				m.logger.Errorf("%v", err)
 			}
 
 			gcode := string(fileBytes)
 
 			f, err := GCodeToMap(gcode)
 			if err != nil {
-				log.Fatal(err)
+				m.logger.Errorf("%v", err)
 			}
 
 			metadata := PrusaSlicerGcodeMetaData{}
@@ -99,9 +101,9 @@ func (m *FileRepository) UpdateFiles() {
 
 			if imgBegin > -1 {
 				img := gcode[imgBegin:imgEnd]
-				imgFirstLine := strings.Index(img, "\n")
+				imgFirstLine := strings.Index(img, "")
 				img = img[imgFirstLine:]
-				img = strings.Replace(img, "\n", "", -1)
+				img = strings.Replace(img, "", "", -1)
 				img = strings.Replace(img, ";", "", -1)
 				metadata.Image = strings.TrimSpace(img)
 			}
@@ -113,5 +115,5 @@ func (m *FileRepository) UpdateFiles() {
 
 	m.Files = filesList
 
-	log.Printf("updated files - %v files found and updated - %v files deleted", len(filesList), filesDeleted)
+	m.logger.Infof("updated files - %v files found and updated - %v files deleted", len(filesList), filesDeleted)
 }

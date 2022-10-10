@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"log"
 	"mime/multipart"
 	"net/http"
 	"net/url"
@@ -13,13 +12,13 @@ import (
 )
 
 func (m *Octoprinter) PostFiles(file *os.File) error {
-	log.Printf("running GetPrinter for %v \n", m.hostname)
+	m.logger.Infof("running PostFiles for %v ", m.hostname)
 
 	apiUrl := fmt.Sprintf("%v://%v/api", "http", m.hostname)
 
 	urlFiles, err := url.JoinPath(apiUrl, "files", "local")
 	if err != nil {
-		log.Printf("FATAL: error on joining paths, %v", err)
+		m.logger.Errorf("FATAL: error on joining paths, %v", err)
 		return err
 	}
 
@@ -32,7 +31,7 @@ func (m *Octoprinter) PostFiles(file *os.File) error {
 	writer.WriteField("print", "true")
 	writer.Close()
 
-	log.Println(fmt.Sprintf("sending post request %s", urlFiles))
+	m.logger.Infof(fmt.Sprintf("sending post request %s", urlFiles))
 
 	r, _ := http.NewRequest("POST", urlFiles, body)
 	r = r.WithContext(m.ctx)

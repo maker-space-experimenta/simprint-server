@@ -14,8 +14,8 @@ func (*LoggerMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next 
 	next.ServeHTTP(w, r)
 
 	// for k, v := range r.Header {
-	// 	fmt.Printf(" %q, Value %q\n", k, v)
+	// 	fmt.Printf(" %q, Value %q", k, v)
 	// }
 
-	fmt.Printf("Execution time: %s \n", time.Now().Sub(t).String())
+	fmt.Printf("Execution time: %s ", time.Now().Sub(t).String())
 }

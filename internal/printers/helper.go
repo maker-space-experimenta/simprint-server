@@ -20,7 +20,7 @@ func GetPrintersMetaData(config configuration.Config) (*[]PrinterModel, error) {
 
 		op, err := octoprint.NewOctoprinter(ctx, printerConfig.Host, printerConfig.Key)
 		if err != nil {
-			log.Printf("error getting printer: %s\n", err)
+			log.Printf("error getting printer: %s", err)
 		}
 
 		p, err := op.GetPrinter()

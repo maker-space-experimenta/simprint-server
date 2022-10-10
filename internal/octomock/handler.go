@@ -2,10 +2,10 @@ package octomock
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/configuration"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 )
 
 type OctoMockResponse struct {
@@ -13,11 +13,13 @@ type OctoMockResponse struct {
 
 type OctoMockHandler struct {
 	config configuration.Config
+	logger *logging.Logger
 }
 
 func NewOctoMockHandler(config configuration.Config) *OctoMockHandler {
 	return &OctoMockHandler{
 		config: config,
+		logger: logging.NewLogger(),
 	}
 }
 
@@ -37,7 +39,7 @@ func (m *OctoMockHandler) GetVersionOctoMock(w http.ResponseWriter, r *http.Requ
 
 	jsonResp, err := json.Marshal(result)
 	if err != nil {
-		log.Fatalf("Error happened in JSOn marshal. Err %s", err)
+		m.logger.Errorf("Error happened in JSOn marshal. Err %s", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(nil)
 		return

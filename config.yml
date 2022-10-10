@@ -2,6 +2,8 @@
 server:
   port: 5000
 
+loglevel: debug
+
 files:
   temp_dir: _temp
   delete_durations_minutes: 100

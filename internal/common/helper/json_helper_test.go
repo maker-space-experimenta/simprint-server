@@ -2,11 +2,13 @@ package helper
 
 import (
 	"encoding/json"
-	"log"
 	"testing"
+
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 )
 
 func TestReadValueFromKey(t *testing.T) {
+	logger := logging.NewLogger()
 
 	body := []byte("{ \"key\": \"value\" }")
 
@@ -15,7 +17,7 @@ func TestReadValueFromKey(t *testing.T) {
 
 	val, err := ReadValueFromKey("key", jsonRes)
 
-	log.Print(val)
+	logger.Infof(val)
 
 	if err != nil {
 		t.Error(err)
@@ -28,6 +30,7 @@ func TestReadValueFromKey(t *testing.T) {
 }
 
 func TestReadValueFromKeyHirarchic(t *testing.T) {
+	logger := logging.NewLogger()
 
 	body := []byte("{ \"key\": {\"key2\": {\"key3\": \"value\"} } }")
 
@@ -36,7 +39,7 @@ func TestReadValueFromKeyHirarchic(t *testing.T) {
 
 	val, err := ReadValueFromKey("key.key2", jsonRes)
 
-	log.Print(val)
+	logger.Infof(val)
 
 	if err != nil {
 		t.Error(err)

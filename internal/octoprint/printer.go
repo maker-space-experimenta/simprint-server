@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 )
@@ -75,13 +74,13 @@ type PrinterState struct {
 }
 
 func (m *Octoprinter) GetPrinter() (*PrinterState, error) {
-	log.Printf("running GetPrinter for %v \n", m.hostname)
+	m.logger.Infof("running GetPrinter for %v ", m.hostname)
 
 	apiUrl := fmt.Sprintf("%v://%v/api", "http", m.hostname)
 
 	urlPrinterprofile, err := url.JoinPath(apiUrl, "printer")
 	if err != nil {
-		log.Fatalln(err)
+		m.logger.Errorf("%v", err)
 	}
 
 	req, _ := http.NewRequest("GET", urlPrinterprofile, nil)
@@ -92,20 +91,20 @@ func (m *Octoprinter) GetPrinter() (*PrinterState, error) {
 	client := http.DefaultClient
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatalln(err)
+		m.logger.Errorf("%v", err)
 		return nil, err
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalln(err)
+		m.logger.Errorf("%v", err)
 		return nil, err
 	}
 
 	var response PrinterState
 	err = json.Unmarshal(body, &response)
 	if err != nil {
-		log.Printf("Error in GetPrinter: %v", err)
+		m.logger.Errorf("%v", err)
 	}
 
 	return &response, nil

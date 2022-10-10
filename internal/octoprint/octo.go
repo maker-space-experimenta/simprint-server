@@ -2,12 +2,15 @@ package octoprint
 
 import (
 	"context"
+
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 )
 
 type Octoprinter struct {
 	ctx      context.Context
 	hostname string
 	apiKey   string
+	logger   *logging.Logger
 }
 
 func NewOctoprinter(ctx context.Context, hostname string, apiKey string) (*Octoprinter, error) {
@@ -15,5 +18,6 @@ func NewOctoprinter(ctx context.Context, hostname string, apiKey string) (*Octop
 		ctx:      ctx,
 		hostname: hostname,
 		apiKey:   apiKey,
+		logger:   logging.NewLogger(),
 	}, nil
 }

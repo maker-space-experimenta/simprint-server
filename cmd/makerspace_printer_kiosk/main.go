@@ -10,6 +10,7 @@ import (
 	"github.com/urfave/negroni"
 
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/configuration"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/middlewares"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/tasks"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/jobs"
@@ -22,8 +23,8 @@ import (
 )
 
 func notFound(w http.ResponseWriter, r *http.Request) {
-
-	log.Printf("not found: %v ", r.URL)
+	logger := logging.NewLogger()
+	logger.Infof("not found: %v ", r.URL)
 
 	w.WriteHeader(http.StatusNotFound)
 	w.Header().Set("Content-Type", "text")
@@ -35,30 +36,24 @@ func main() {
 	configService := configuration.NewConfigService()
 	err := configService.LoadConfig("./config.yml")
 	if err != nil {
-		log.Fatal("cannot load config:", err)
+		log.Fatalf("cannot load config:", err)
 	}
 
 	config, err := configService.GetConfig()
 	if err != nil {
-		log.Fatal("cannot load config:", err)
+		log.Fatalf("cannot load config:", err)
 	}
 
-	printerRepository := printers.NewPrinterRepository(*config)
-	filesRepository := files.NewFileRepository(*config)
-
-	log.Println("config loaded")
-	log.Print(config)
-	log.Println("")
+	logger := logging.NewLogger()
+	logger.Infof("starting application printerkiosk-api")
 
 	router := mux.NewRouter()
-
 	octomock.AddRoutes(router)
 	files.AddRoutes(router)
 	printers.AddRoutes(router)
 	jobs.AddRoutes(router)
 	slicer.AddRoutes(router)
 	spa.AddRoutes(router)
-
 	router.Path("/metrics").Handler(promhttp.Handler())
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 
@@ -68,8 +63,10 @@ func main() {
 	// n.Use(&toolbox_middleware.AuthMiddleware{})
 	n.UseHandler(router)
 
-	log.Printf("starting server on port %v", config.Server.Port)
+	logger.Infof("starting server on port %v", config.Server.Port)
 
+	printerRepository := printers.NewPrinterRepository(*config)
+	filesRepository := files.NewFileRepository(*config)
 	taskRunner := tasks.NewTaskRunner(*&config.Tasks.Duration)
 	taskRunner.AddTask(printerRepository.UpdatePrinters)
 	taskRunner.AddTask(filesRepository.UpdateFiles)

@@ -60,17 +60,17 @@ type PrinterProfileList struct {
 }
 
 func (m *Octoprinter) GetPrinterProfiles() (*PrinterProfileList, error) {
-	log.Printf("running GetPrinterProfiles for %v \n", m.hostname)
+	m.logger.Infof("running GetPrinterProfiles for %v ", m.hostname)
 
 	apiUrl := fmt.Sprintf("%v://%v/api", "http", m.hostname)
 	urlPrinterprofile, err := url.JoinPath(apiUrl, "printerprofiles")
 	if err != nil {
-		log.Fatalln(err)
+		m.logger.Errorf("%v", err)
 	}
 
 	req, err := http.NewRequest("GET", urlPrinterprofile, nil)
 	if err != nil {
-		log.Fatalln(err)
+		m.logger.Errorf("%v", err)
 		return nil, err
 	}
 
@@ -84,13 +84,13 @@ func (m *Octoprinter) GetPrinterProfiles() (*PrinterProfileList, error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Printf("FATAL: client: error making http request: %s\n", err)
+		log.Printf("FATAL: client: error making http request: %s", err)
 		return nil, err
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalln(err)
+		m.logger.Errorf("%v", err)
 		return nil, err
 	}
 

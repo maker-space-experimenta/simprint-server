@@ -2,13 +2,16 @@ package helper
 
 import (
 	"errors"
-	"log"
 	"strings"
+
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 )
 
 func ReadValueFromKey(key string, json map[string]interface{}) (string, error) {
+	logger := logging.NewLogger()
+
 	nodes := strings.Split(key, ".")
-	log.Printf("node[o]: %v", nodes[0])
+	logger.Infof("node[o]: %v", nodes[0])
 
 	if len(nodes) > 1 {
 		if json[nodes[0]] != nil {

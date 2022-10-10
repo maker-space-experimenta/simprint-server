@@ -3,12 +3,12 @@ package files
 import (
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 	"path"
 
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/configuration"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/helper"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 )
 
 type FilesApiResponse struct {
@@ -19,6 +19,7 @@ type FilesApiResponse struct {
 type FilesHandler struct {
 	config   configuration.Config
 	fileRepo *FileRepository
+	logger   logging.Logger
 }
 
 func NewFilesHandler(config configuration.Config) *FilesHandler {
@@ -29,7 +30,7 @@ func NewFilesHandler(config configuration.Config) *FilesHandler {
 }
 
 func (m *FilesHandler) GetFiles(w http.ResponseWriter, r *http.Request) {
-	log.Printf("enter files route endpoint GetFiles for " + string(r.URL.Path))
+	m.logger.Infof("enter files route endpoint GetFiles for " + string(r.URL.Path))
 
 	filesList := m.fileRepo.Files
 
@@ -44,7 +45,7 @@ func (m *FilesHandler) GetFiles(w http.ResponseWriter, r *http.Request) {
 
 	jsonResp, err := json.Marshal(response)
 	if err != nil {
-		log.Fatalf("Error happened in JSOn marshal. Err %s", err)
+		m.logger.Errorf("Error happened in JSOn marshal. Err %s", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(nil)
 		return
@@ -56,11 +57,11 @@ func (m *FilesHandler) GetFiles(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *FilesHandler) PostFiles(w http.ResponseWriter, r *http.Request) {
-	log.Printf("enter files route endpoint PostFile for " + string(r.URL.Path))
+	m.logger.Infof("enter files route endpoint PostFile for " + string(r.URL.Path))
 
 	filepath, err := helper.SaveFileFromForm(r, "file", path.Join(m.config.Files.TempDir, "gcode"), "sliced.gcode")
 	if err != nil {
-		log.Printf("FATAL: could not load and save file, %v", err)
+		m.logger.Infof("FATAL: could not load and save file, %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(nil)
 		return

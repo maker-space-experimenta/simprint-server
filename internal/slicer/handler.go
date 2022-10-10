@@ -26,7 +26,7 @@ func (m *SlicerHandler) GetJobs(w http.ResponseWriter, r *http.Request) {
 
 	// jsonResp, err := json.Marshal(m.printerRepo.Printers)
 	// if err != nil {
-	// 	log.Fatalf("Error happened in JSON marshal. Err %s", err)
+	// 	logger.Errorff("Error happened in JSON marshal. Err %s", err)
 	// 	w.WriteHeader(http.StatusInternalServerError)
 	// 	w.Write(nil)
 	// 	return

@@ -5,6 +5,8 @@ type Config struct {
 		Port string `yaml:"port"`
 	} `yaml:"server"`
 
+	LogLevel string `xaml:"loglevel"`
+
 	Files struct {
 		TempDir        string `yaml:"temp_dir"`
 		DeleteDuration int    `yaml:"delete_durations_minutes"`

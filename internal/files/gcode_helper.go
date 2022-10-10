@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/configuration"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 )
 
 func GCodeToMap(gcode string) (map[string]string, error) {
@@ -44,10 +45,12 @@ func GCodeToMap(gcode string) (map[string]string, error) {
 }
 
 func GCodeToImage(path string) {
+	logger := logging.NewLogger()
+
 	configService := configuration.NewConfigService()
 	config, err := configService.GetConfig()
 	if err != nil {
-		log.Fatal("cannot load config:", err)
+		logger.Errorf("cannot load config:", err)
 	}
 
 	dirName := fmt.Sprintf("%v/thumbnails", config.Files.TempDir)

@@ -1,8 +1,9 @@
 package tasks
 
 import (
-	"log"
 	"time"
+
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 )
 
 type Task struct {
@@ -12,11 +13,13 @@ type Task struct {
 type TaskRunner struct {
 	interval int
 	tasks    []Task
+	logger   *logging.Logger
 }
 
 func NewTaskRunner(interval int) *TaskRunner {
 	return &TaskRunner{
 		interval: interval,
+		logger:   logging.NewLogger(),
 	}
 }
 
@@ -27,8 +30,7 @@ func (m *TaskRunner) AddTask(cb func()) {
 }
 
 func (m *TaskRunner) Start() {
-	log.Println("TaskRunner - Starting TaskRunner")
-
+	m.logger.Infof("TaskRunner - Starting TaskRunner")
 	go m.runLoop()
 }
 
@@ -40,7 +42,7 @@ func (m *TaskRunner) runLoop() {
 }
 
 func (m *TaskRunner) Loop() {
-	log.Println("TaskRunner - Run TaskRunner Loop")
+	m.logger.Infof("TaskRunner - Run TaskRunner Loop")
 
 	for _, element := range m.tasks {
 		element.Callback()

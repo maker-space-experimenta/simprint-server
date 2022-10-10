@@ -3,27 +3,34 @@ package helper
 import (
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
+
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 )
 
 /*
  */
 func SaveFileFromForm(r *http.Request, field string, dir string, filename string) (string, error) {
-	file, _, err := r.FormFile(field)
+	logger := logging.NewLogger()
+
+	file, handler, err := r.FormFile(field)
 	if err != nil {
 		return "", err
 	}
 	defer file.Close()
 
+	if filename == "" {
+		filename = handler.Filename
+	}
+
+	filepath := fmt.Sprintf("%v/%v", dir, filename)
+	logger.Infof(filepath)
+
 	err = os.MkdirAll(dir, os.ModePerm)
 	if err != nil {
 		return "", err
 	}
-
-	filepath := fmt.Sprintf("%v/%v", dir, filename)
-	log.Printf(filepath)
 
 	f, err := os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {

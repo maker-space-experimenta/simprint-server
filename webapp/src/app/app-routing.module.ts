@@ -1,32 +1,27 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { FilesComponent } from './components/files/files.component';
-import { PrintersComponent } from './components/printers/printers.component';
-import { SliceComponent } from './components/slice/slice.component';
-import { SlideshowComponent } from './components/slideshow/slideshow.component';
 
 const routes: Routes = [
   {
-    component: SlideshowComponent,
-    path: "slideshow"
+    path: "slicer",
+    loadChildren: () => {
+      return new Promise((resolve, reject) => {
+        import('./slicer/slicer.module').then(m => {
+          resolve(m.SlicerModule);
+        });
+      });
+    }
   },
   {
-    component: FilesComponent,
-    path: "files"
+    path: "kiosk",
+    loadChildren: () => {
+      return new Promise((resolve, reject) => {
+        import('./kiosk/kiosk.module').then(m => {
+          resolve(m.KioskModule);
+        });
+      });
+    }
   },
-  {
-    component: PrintersComponent,
-    path: "printers"
-  },
-  {
-    component: SliceComponent,
-    path: "slice"
-  },
-
-  {
-    redirectTo: "/slideshow",
-    path: "**"
-  }
 ];
 
 @NgModule({

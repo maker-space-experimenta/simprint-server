@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -84,7 +83,7 @@ func (m *Octoprinter) GetPrinterProfiles() (*PrinterProfileList, error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Printf("FATAL: client: error making http request: %s", err)
+		m.logger.Errorf("FATAL: client: error making http request: %s", err)
 		return nil, err
 	}
 

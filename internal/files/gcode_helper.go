@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"image/png"
 	"io/ioutil"
-	"log"
 	"os"
 	"strings"
 
@@ -74,7 +73,7 @@ func GCodeToImage(path string) {
 
 	}
 
-	log.Printf("start %v, end %v", start, end)
+	logger.Infof("start %v, end %v", start, end)
 	image := ""
 	foo := false
 
@@ -88,7 +87,7 @@ func GCodeToImage(path string) {
 		}
 	}
 
-	log.Print(image)
+	logger.Infof(image)
 
 	unbased, err := base64.StdEncoding.DecodeString(image)
 	if err != nil {

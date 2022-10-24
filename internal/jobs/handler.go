@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/configuration"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/octoprint"
 )
 
@@ -19,17 +19,19 @@ type PostPrintModel struct {
 
 type PrintHandler struct {
 	config configuration.Config
+	logger *logging.Logger
 }
 
 func NewPrintHandler(config configuration.Config) *PrintHandler {
 	return &PrintHandler{
 		config: config,
+		logger: logging.NewLogger(),
 	}
 }
 
 func (m *PrintHandler) PostPrint(w http.ResponseWriter, r *http.Request) {
 
-	log.Println("executing PostPrint Endpoint")
+	m.logger.Infof("executing PostPrint Endpoint")
 
 	defer r.Body.Close()
 	bodyBytes, err := io.ReadAll(r.Body)
@@ -40,10 +42,10 @@ func (m *PrintHandler) PostPrint(w http.ResponseWriter, r *http.Request) {
 	var bodyData PostPrintModel
 	_ = json.Unmarshal(bodyBytes, &bodyData)
 
-	log.Println(bodyData.File)
-	log.Println(bodyData.Printer)
+	m.logger.Infof(bodyData.File)
+	m.logger.Infof(bodyData.Printer)
 
-	log.Println("sending print job")
+	m.logger.Infof("sending print job")
 
 	dirName := m.config.Files.TempDir
 	filePath := fmt.Sprintf("%v/%v", dirName, bodyData.File)

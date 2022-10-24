@@ -1,7 +1,6 @@
 package slicer
 
 import (
-	"log"
 	"net/http"
 	"os"
 	"os/exec"
@@ -9,10 +8,12 @@ import (
 
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/configuration"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/helper"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 )
 
 type SlicerHandler struct {
 	config configuration.Config
+	logger *logging.Logger
 }
 
 func NewSlicerHandler(config configuration.Config) *SlicerHandler {
@@ -22,7 +23,7 @@ func NewSlicerHandler(config configuration.Config) *SlicerHandler {
 }
 
 func (m *SlicerHandler) GetJobs(w http.ResponseWriter, r *http.Request) {
-	log.Printf("running GetPrinters")
+	m.logger.Infof("running GetPrinters")
 
 	// jsonResp, err := json.Marshal(m.printerRepo.Printers)
 	// if err != nil {
@@ -39,11 +40,11 @@ func (m *SlicerHandler) GetJobs(w http.ResponseWriter, r *http.Request) {
 
 func (m *SlicerHandler) PostSlicejob(w http.ResponseWriter, r *http.Request) {
 
-	log.Printf("call PostSlicejob")
+	m.logger.Infof("call PostSlicejob")
 
 	stlPath, err := helper.SaveFileFromForm(r, "file", path.Join(m.config.Files.TempDir, "stl"), "model.stl")
 	if err != nil {
-		log.Printf("FATAL: Could not decode and save stl file from request. Err %s", err)
+		m.logger.Infof("FATAL: Could not decode and save stl file from request. Err %s", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(nil)
 		return
@@ -65,7 +66,7 @@ func (m *SlicerHandler) PostSlicejob(w http.ResponseWriter, r *http.Request) {
 
 	err = os.Remove(stlPath)
 	if err != nil {
-		log.Printf("FATAL: Could not decode and save stl file from request. Err %s", err)
+		m.logger.Infof("FATAL: Could not decode and save stl file from request. Err %s", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(nil)
 		return

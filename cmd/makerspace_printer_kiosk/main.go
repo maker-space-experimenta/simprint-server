@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -36,12 +37,14 @@ func main() {
 	configService := configuration.NewConfigService()
 	err := configService.LoadConfig("./config.yml")
 	if err != nil {
-		log.Fatalf("cannot load config:", err)
+		log.Printf("cannot load config: %v", err)
+		os.Exit(1)
 	}
 
 	config, err := configService.GetConfig()
 	if err != nil {
-		log.Fatalf("cannot load config:", err)
+		log.Printf("cannot load config: %v", err)
+		os.Exit(1)
 	}
 
 	logger := logging.NewLogger()
@@ -74,5 +77,5 @@ func main() {
 	taskRunner.Start()
 
 	//start and listen to requests
-	http.ListenAndServe(fmt.Sprintf(":%v", config.Server.Port), n)
+	http.ListenAndServe(fmt.Sprintf("0.0.0.0:%v", config.Server.Port), n)
 }

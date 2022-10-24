@@ -26,6 +26,7 @@ func NewFilesHandler(config configuration.Config) *FilesHandler {
 	return &FilesHandler{
 		config:   config,
 		fileRepo: NewFileRepository(config),
+		logger:   *logging.NewLogger(),
 	}
 }
 

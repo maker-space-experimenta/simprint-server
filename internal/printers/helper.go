@@ -2,14 +2,15 @@ package printers
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/configuration"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/octoprint"
 )
 
 func GetPrintersMetaData(config configuration.Config) (*[]PrinterModel, error) {
+	logger := logging.NewLogger()
 
 	var printers []PrinterModel
 
@@ -20,7 +21,7 @@ func GetPrintersMetaData(config configuration.Config) (*[]PrinterModel, error) {
 
 		op, err := octoprint.NewOctoprinter(ctx, printerConfig.Host, printerConfig.Key)
 		if err != nil {
-			log.Printf("error getting printer: %s", err)
+			logger.Errorf("error getting printer: %s", err)
 		}
 
 		p, err := op.GetPrinter()

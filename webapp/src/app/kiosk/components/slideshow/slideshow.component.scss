@@ -6,7 +6,7 @@
     min-height: 100vh;
     min-width: 100vw;
     
-    background-image: url(./../../../assets/printer-sleeping.jpeg);
+    background-image: url(./../../../../assets/background_3d_printer.jpeg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -27,23 +27,28 @@
 
             padding-left: 2rem;
             padding-right: 2rem;
+            text-align: center;
 
             h1 {
                 text-transform: uppercase;
             }
 
-            p {
-                text-align: justify;
-            }
         }
     
         &.navigation {
             margin-bottom: 0;
             width: 100vw;
-            height: 72px;
+            height: 144px;
             background-color: #000;
             display: flex;
             align-items: center;
+
+            .col {
+                font-size: 64px;
+                color: #fff;
+                text-align: center;
+
+            }
         }
     }
 }

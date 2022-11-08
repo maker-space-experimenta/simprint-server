@@ -1,19 +1,21 @@
-<div class="container-fluid ms-3 me-3 mt-4">
+<div class="container-fluid ps-3 pe-3 pt-4 pb-4 h-100">
 
-    <div class="row" *ngIf="files.length == 0">
-        <div class="col">
-            Keine Dateien zum drucken vorhanden.
+    <div class="row h-100 d-flex" style="align-items: center;" *ngIf="files.length == 0">
+        <div class="col" style="text-align: center;">
+            <p>
+                Keine Dateien zum drucken vorhanden.
+            </p>
+            <p>
+                Sprich uns an, wenn du Hilfe beim Erstellen einer 3D Druck Datein benötigst
+            </p>
 
-            Scanne den QR Code für die URL zum STL hochladen
-
-            <canvas #qrCodeCanvas></canvas>
         </div>
     </div>
 
     <div class="row">
         <div class="col">
             <div class="row">
-                <a [routerLink]="['/printers']" [queryParams]="{file: file.filename}" class="col-3"
+                <a [routerLink]="['/kiosk/printers']" [queryParams]="{file: file.filename}" class="col-3"
                     style="text-decoration: none; color: #000;" *ngFor="let file of files">
                     <app-file-card [data]="file"></app-file-card>
                 </a>
@@ -24,6 +26,6 @@
 
 <div class="navigation">
 
-    <a [routerLink]="['/slideshow']" type="button" class="btn btn-outline-secondary">zurück</a>
+    <a [routerLink]="['/kiosk/slideshow']" type="button" class="btn btn-outline-secondary">zurück</a>
 
 </div>

@@ -2,23 +2,26 @@ package configuration
 
 type Config struct {
 	Server struct {
-		Port string `yaml:"port"`
-	} `yaml:"server"`
+		Port string `yaml:"port" json:"port"`
+	} `yaml:"server" json:"server"`
 
-	LogLevel string `xaml:"loglevel"`
+	Logging struct {
+		Level string `yaml:"level" json:"level"`
+	} `yaml:"logging" json:"logging"`
 
 	Files struct {
-		TempDir        string `yaml:"temp_dir"`
-		DeleteDuration int    `yaml:"delete_durations_minutes"`
-	} `yaml:"files"`
+		TempDir        string `yaml:"temp_dir" json:"temp_dir"`
+		DeleteDuration int    `yaml:"delete_durations_minutes" json:"delete_durations_minutes"`
+	} `yaml:"files" json:"files"`
 
 	Tasks struct {
 		Duration int `yaml:"duration"`
 	} `yaml:"tasks"`
 
 	Printers map[string]struct {
-		Host string `yaml:"host"`
-		Key  string `yaml:"key"`
+		Host  string `yaml:"host"`
+		Key   string `yaml:"key"`
+		Image string `default:"" yaml:"image,omitempty"`
 	} `yaml:"printers"`
 
 	Database struct {

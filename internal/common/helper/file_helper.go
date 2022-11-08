@@ -11,12 +11,12 @@ import (
 
 /*
  */
-func SaveFileFromForm(r *http.Request, field string, dir string, filename string) (string, error) {
+func SaveFileFromForm(r *http.Request, field string, dir string, filename string) (string, string, error) {
 	logger := logging.NewLogger()
 
 	file, handler, err := r.FormFile(field)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	defer file.Close()
 
@@ -29,20 +29,20 @@ func SaveFileFromForm(r *http.Request, field string, dir string, filename string
 
 	err = os.MkdirAll(dir, os.ModePerm)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	f, err := os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	defer f.Close()
 
 	_, err = io.Copy(f, file)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	return filepath, nil
+	return filepath, filename, nil
 }

@@ -1,0 +1,50 @@
+
+.background-image {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-height: 100vh;
+    min-width: 100vw;
+    
+    background-image: url(./../../../../assets/background_3d_printer.jpeg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.content {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100vw;
+    background-color: rgba(255, 255, 255, 0.3);
+
+    .row {
+        margin-right: 0;
+        margin-left: 0;
+    
+        .col {
+
+            padding-left: 2rem;
+            padding-right: 2rem;
+
+            h1 {
+                text-transform: uppercase;
+            }
+
+            p {
+                text-align: justify;
+            }
+        }
+    
+        &.navigation {
+            margin-bottom: 0;
+            width: 100vw;
+            height: 72px;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+        }
+    }
+}
+

@@ -12,14 +12,22 @@ type OctoMockResponse struct {
 }
 
 type OctoMockHandler struct {
-	config configuration.Config
+	config *configuration.Config
 	logger *logging.Logger
 }
 
-func NewOctoMockHandler(config configuration.Config) *OctoMockHandler {
+func NewOctoMockHandler(config *configuration.Config) *OctoMockHandler {
+
+	logger := logging.NewLogger()
+	logger.Debugf("Create new Mock Handler")
+
+	if config == nil {
+		logger.Errorf("no config found")
+	}
+
 	return &OctoMockHandler{
 		config: config,
-		logger: logging.NewLogger(),
+		logger: logger,
 	}
 }
 

@@ -20,6 +20,15 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
+
+  it("should contain a array with 20 elements", () => {
+
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+
+    expect(app.array.length).toBe(20);
+  });
+
   it(`should have as title 'printer-kiosk'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;

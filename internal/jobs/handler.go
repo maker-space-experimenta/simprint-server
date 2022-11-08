@@ -48,33 +48,20 @@ func (m *PrintHandler) PostPrint(w http.ResponseWriter, r *http.Request) {
 	m.logger.Infof("sending print job")
 
 	dirName := m.config.Files.TempDir
-	filePath := fmt.Sprintf("%v/%v", dirName, bodyData.File)
+	filePath := fmt.Sprintf("%v/gcode/%v", dirName, bodyData.File)
 	printer := m.config.Printers[bodyData.Printer]
+
+	m.logger.Debugf("filepath is %v", filePath)
+	m.logger.Debugf("printer is %v", printer)
 
 	file, _ := os.Open(filePath)
 	defer file.Close()
 
 	op, err := octoprint.NewOctoprinter(r.Context(), printer.Host, printer.Key)
-	op.PostFiles(file)
+	op.PrintFile(file, r.Context())
+	// op.SendFile(file, r.Context())
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte("{ \"result\": \"ok\" }"))
 }
-
-// func SliceFile() {
-
-// model := ""
-// config_path := ""
-// scale := ""
-// output := ""
-
-// args := []string{
-// 	"-g", model,
-// 	"--load", config_path,
-// 	"--scale-to-fit", scale,
-// 	"--output", output,
-// }
-
-// cmd := exec.Command("prusa-slicer", args)
-// }

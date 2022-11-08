@@ -1,1 +1,14 @@
-<p>upload works!</p>
+
+<div class="upload-container">
+
+    <input type="file" class="file-input" accept=".stl"
+           (change)="onFileSelected($event)" #fileUpload>
+    
+    
+    <div class="file-upload"(click)="fileUpload.click()">
+    
+       {{fileName || "No file uploaded yet."}}
+    
+    </div>
+
+</div>

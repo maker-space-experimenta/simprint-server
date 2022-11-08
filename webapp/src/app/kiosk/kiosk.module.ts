@@ -8,8 +8,8 @@ import { FilesComponent } from './components/files/files.component';
 import { FileCardComponent } from './components/file-card/file-card.component';
 import { PrintersComponent } from './components/printers/printers.component';
 import { PrinterCardComponent } from './components/printer-card/printer-card.component';
-import { SliceComponent } from './components/slice/slice.component';
 import { KioskRoutingModule } from './kiosk.router.module';
+import { SuccessComponent } from './components/success/success.component';
 
 
 @NgModule({
@@ -19,7 +19,7 @@ import { KioskRoutingModule } from './kiosk.router.module';
     FileCardComponent,
     PrintersComponent,
     PrinterCardComponent,
-    SliceComponent
+    SuccessComponent
   ],
   imports: [
     CommonModule,

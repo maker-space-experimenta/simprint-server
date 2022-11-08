@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FilesComponent } from './components/files/files.component';
 import { PrintersComponent } from './components/printers/printers.component';
-import { SliceComponent } from './components/slice/slice.component';
 import { SlideshowComponent } from './components/slideshow/slideshow.component';
+import { SuccessComponent } from './components/success/success.component';
 
 
 const routes: Routes = [
@@ -21,12 +21,12 @@ const routes: Routes = [
         path: "printers"
       },
       {
-        component: SliceComponent,
-        path: "slice"
+        component: SuccessComponent,
+        path: "success"
       },
     
       {
-        redirectTo: "/kiosk/slideshow",
+        redirectTo: "/kiosk/slideshow/",
         path: "**"
       }
 ];

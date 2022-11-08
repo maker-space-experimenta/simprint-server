@@ -1,12 +1,9 @@
-
 server:
   port: 5000
 
-loglevel: debug
-
 files:
   temp_dir: _temp
-  delete_durations_minutes: 100
+  delete_durations_minutes: 10
 
 tasks:
   duration: 5
@@ -14,10 +11,11 @@ tasks:
 printers:
   octopi-prusa-001:
     host: octopi-prusa-001
-    key: F84833BA940E49648F606EA561E97783
+    key: <<API KEY>>
   octopi-prusa-002:
     host: octopi-prusa-002
-    key: F84833BA940E49648F606EA561E97783
+    key: <<API KEY>>
+    image: <<path to printer image>>  # optional
 
-# OAUTH_CLIENT_ID=makerspace_printer_kiosk
-# OAUTH_CLIENT_SECRET=EBPNkvB9Yc4JhLT4vDqu94OkwNmd5L8W
+logging:
+  level: info

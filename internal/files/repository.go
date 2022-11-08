@@ -101,10 +101,11 @@ func (m *FileRepository) UpdateFiles() {
 
 			if imgBegin > -1 {
 				img := gcode[imgBegin:imgEnd]
-				imgFirstLine := strings.Index(img, "")
+				imgFirstLine := strings.Index(img, "\n")
 				img = img[imgFirstLine:]
 				img = strings.Replace(img, "", "", -1)
 				img = strings.Replace(img, ";", "", -1)
+				img = strings.Replace(img, "\n", "", -1)
 				metadata.Image = strings.TrimSpace(img)
 			}
 

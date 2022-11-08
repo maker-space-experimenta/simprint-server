@@ -14,13 +14,12 @@ import (
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/middlewares"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/tasks"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/files"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/jobs"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/octomock"
+	"github.com/maker-space-experimenta/printer-kiosk/internal/printers"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/slicer"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/spa"
-
-	"github.com/maker-space-experimenta/printer-kiosk/internal/files"
-	"github.com/maker-space-experimenta/printer-kiosk/internal/printers"
 )
 
 func notFound(w http.ResponseWriter, r *http.Request) {
@@ -46,17 +45,23 @@ func main() {
 		log.Printf("cannot load config: %v", err)
 		os.Exit(1)
 	}
+	if config == nil {
+		log.Printf("loaded config is nil: %v", config)
+		os.Exit(1)
+	}
 
 	logger := logging.NewLogger()
 	logger.Infof("starting application printerkiosk-api")
 
+	logger.Debugf("config: %v", config)
+
 	router := mux.NewRouter()
-	octomock.AddRoutes(router)
-	files.AddRoutes(router)
-	printers.AddRoutes(router)
-	jobs.AddRoutes(router)
-	slicer.AddRoutes(router)
-	spa.AddRoutes(router)
+	octomock.AddRoutes(router, config)
+	files.AddRoutes(router, config)
+	printers.AddRoutes(router, config)
+	jobs.AddRoutes(router, config)
+	slicer.AddRoutes(router, config)
+	spa.AddRoutes(router, config)
 	router.Path("/metrics").Handler(promhttp.Handler())
 	router.NotFoundHandler = http.HandlerFunc(notFound)
 

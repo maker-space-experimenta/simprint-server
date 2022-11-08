@@ -1,15 +1,18 @@
 package middlewares
 
 import (
-	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 )
 
 type LoggerMiddleware struct{}
 
 func (*LoggerMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-	fmt.Println("The logger middleware is executing!")
+	logger := logging.NewLogger()
+
+	logger.Debugf("The logger middleware is executing!")
 	t := time.Now()
 	next.ServeHTTP(w, r)
 
@@ -17,5 +20,5 @@ func (*LoggerMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next 
 	// 	fmt.Printf(" %q, Value %q", k, v)
 	// }
 
-	fmt.Printf("Execution time: %s ", time.Now().Sub(t).String())
+	logger.Debugf("Execution time: %s ", time.Now().Sub(t).String())
 }

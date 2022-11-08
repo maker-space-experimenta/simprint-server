@@ -42,7 +42,7 @@ func (m *SlicerHandler) PostSlicejob(w http.ResponseWriter, r *http.Request) {
 
 	m.logger.Infof("call PostSlicejob")
 
-	stlPath, err := helper.SaveFileFromForm(r, "file", path.Join(m.config.Files.TempDir, "stl"), "model.stl")
+	stlPath, _, err := helper.SaveFileFromForm(r, "file", path.Join(m.config.Files.TempDir, "stl"), "")
 	if err != nil {
 		m.logger.Infof("FATAL: Could not decode and save stl file from request. Err %s", err)
 		w.WriteHeader(http.StatusInternalServerError)

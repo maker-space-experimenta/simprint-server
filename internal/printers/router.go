@@ -6,14 +6,9 @@ import (
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 )
 
-func AddRoutes(router *mux.Router) {
+func AddRoutes(router *mux.Router, config *configuration.Config) {
 	logger := logging.NewLogger()
-
-	configService := configuration.NewConfigService()
-	config, err := configService.GetConfig()
-	if err != nil {
-		logger.Errorf("FATAL: cannot load config: %v", err)
-	}
+	logger.Debugf("Running printers AddRoutes")
 
 	printersHandler := NewPrintersHandler(*config)
 

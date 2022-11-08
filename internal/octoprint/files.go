@@ -2,25 +2,44 @@ package octoprint
 
 import (
 	"bytes"
+	"context"
+	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
 )
 
-func (m *Octoprinter) PostFiles(file *os.File) error {
+// Sends a file to a octoprint instance by post http
+func (m *Octoprinter) postFiles(file *os.File, context context.Context, print bool) error {
 	m.logger.Infof("running PostFiles for %v ", m.hostname)
 
-	apiUrl := fmt.Sprintf("%v://%v/api", "http", m.hostname)
+	if file == nil {
+		m.logger.Errorf("file is nil")
+		return errors.New("file is nil")
+	}
 
-	urlFiles, err := url.JoinPath(apiUrl, "files", "local")
+	addr, err := net.LookupIP(m.hostname)
+	if err != nil {
+		m.logger.Errorf("Unknown host " + m.hostname)
+		return err
+	} else {
+		m.logger.Debugf("IP address: %v", addr)
+	}
+
+	urlApi := fmt.Sprintf("%v://%v/api", "http", addr[0])
+	m.logger.Debugf(urlApi)
+
+	urlFiles, err := url.JoinPath(urlApi, "files", "local")
 	if err != nil {
 		m.logger.Errorf("FATAL: error on joining paths, %v", err)
 		return err
 	}
+	m.logger.Debugf(urlFiles)
 
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
@@ -28,7 +47,7 @@ func (m *Octoprinter) PostFiles(file *os.File) error {
 	io.Copy(part, file)
 
 	writer.WriteField("path", "/")
-	writer.WriteField("print", "true")
+	writer.WriteField("print", fmt.Sprintf("%v", print))
 	writer.Close()
 
 	m.logger.Infof(fmt.Sprintf("sending post request %s", urlFiles))
@@ -42,4 +61,12 @@ func (m *Octoprinter) PostFiles(file *os.File) error {
 	client.Do(r)
 
 	return nil
+}
+
+func (m *Octoprinter) SendFile(file *os.File, context context.Context) error {
+	return m.postFiles(file, context, false)
+}
+
+func (m *Octoprinter) PrintFile(file *os.File, context context.Context) error {
+	return m.postFiles(file, context, true)
 }

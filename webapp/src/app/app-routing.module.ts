@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { Path } from 'three';
 
 const routes: Routes = [
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
       });
     }
   },
+  {
+    redirectTo: "/kiosk/slideshow",
+    path: "**"
+  }
 ];
 
 @NgModule({

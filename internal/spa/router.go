@@ -6,14 +6,9 @@ import (
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 )
 
-func AddRoutes(router *mux.Router) {
+func AddRoutes(router *mux.Router, config *configuration.Config) {
 	logger := logging.NewLogger()
-
-	configService := configuration.NewConfigService()
-	config, err := configService.GetConfig()
-	if err != nil {
-		logger.Errorf("cannot load config:", err)
-	}
+	logger.Debugf("Running SPA AddRoutes")
 
 	spaHandler := NewSpaHandler(*config, "static", "index.html")
 	router.PathPrefix("/").Handler(spaHandler)

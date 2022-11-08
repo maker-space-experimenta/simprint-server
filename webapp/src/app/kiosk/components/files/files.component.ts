@@ -1,25 +1,30 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 // import { GCodeRenderer, Color, SpeedColorizer } from 'gcode-viewer';
 import {QRCode } from 'qrcode'
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-files',
   templateUrl: './files.component.html',
   styleUrls: ['./files.component.scss']
 })
-export class FilesComponent implements OnInit, AfterViewInit {
+export class FilesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('qrCodeCanvas')qrCodeCanvas: ElementRef | undefined;
 
   files: any[] = [];
+  timeoutHandle: any;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) { }
+  
 
   updateFiles() {
-    this.http.get("http://172.18.5.196:5000/api/files/local").subscribe((files: any) => {
+    this.http.get(environment.api + "/api/files/local").subscribe((files: any) => {
       if (files) {
         console.log(files)
         this.files = files.data;
@@ -33,12 +38,13 @@ export class FilesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.timeoutHandle = setTimeout(() => {
+      this.router.navigate(["/kiosk/slideshow/"]);
+    }, 60000);
+  }
 
-    // QRCode
-
-    // QRCode.toCanvas(this.qrCodeCanvas, 'sample text', (err: any) => {
-    //   console.log(err);
-    // })
+  ngOnDestroy(): void {
+    clearTimeout(this.timeoutHandle);
   }
 
 }

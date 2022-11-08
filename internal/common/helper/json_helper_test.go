@@ -30,16 +30,12 @@ func TestReadValueFromKey(t *testing.T) {
 }
 
 func TestReadValueFromKeyHirarchic(t *testing.T) {
-	logger := logging.NewLogger()
-
 	body := []byte("{ \"key\": {\"key2\": {\"key3\": \"value\"} } }")
 
 	var jsonRes map[string]interface{}
 	_ = json.Unmarshal(body, &jsonRes)
 
 	val, err := ReadValueFromKey("key.key2", jsonRes)
-
-	logger.Infof(val)
 
 	if err != nil {
 		t.Error(err)

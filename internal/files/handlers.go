@@ -60,7 +60,7 @@ func (m *FilesHandler) GetFiles(w http.ResponseWriter, r *http.Request) {
 func (m *FilesHandler) PostFiles(w http.ResponseWriter, r *http.Request) {
 	m.logger.Infof("enter files route endpoint PostFile for " + string(r.URL.Path))
 
-	filepath, err := helper.SaveFileFromForm(r, "file", path.Join(m.config.Files.TempDir, "gcode"), "sliced.gcode")
+	filepath, filename, err := helper.SaveFileFromForm(r, "file", path.Join(m.config.Files.TempDir, "gcode"), "")
 	if err != nil {
 		m.logger.Infof("FATAL: could not load and save file, %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -68,5 +68,5 @@ func (m *FilesHandler) PostFiles(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, _ = io.WriteString(w, "File "+filepath+" Uploaded successfully")
+	_, _ = io.WriteString(w, "File "+filepath+" "+filename+" Uploaded successfully")
 }

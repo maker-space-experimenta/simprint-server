@@ -6,16 +6,13 @@ import (
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 )
 
-func AddRoutes(router *mux.Router) {
+func AddRoutes(router *mux.Router, config *configuration.Config) {
+
 	logger := logging.NewLogger()
+	logger.Debugf("Running OctoMock AddRoutes")
 
-	configService := configuration.NewConfigService()
-	config, err := configService.GetConfig()
-	if err != nil {
-		logger.Errorf("cannot load config:", err)
-	}
-
-	octoMockHandler := NewOctoMockHandler(*config)
+	octoMockHandler := NewOctoMockHandler(config)
+	logger.Debugf("OctoMock Handler created")
 
 	router.Path("/api/version").Methods("GET").HandlerFunc(octoMockHandler.GetVersionOctoMock)
 

@@ -1,16 +1,18 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-printers',
   templateUrl: './printers.component.html',
   styleUrls: ['./printers.component.scss']
 })
-export class PrintersComponent implements OnInit {
+export class PrintersComponent implements OnInit, AfterViewInit, OnDestroy {
 
   printers: any[] = [];
   filename: any;
+  timeoutHandle: any;
 
   constructor(
     private http: HttpClient,
@@ -19,7 +21,7 @@ export class PrintersComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    this.http.get("http://172.18.5.196:5000/api/printers").subscribe((printers: any) => {
+    this.http.get(environment.api + "/api/printers").subscribe((printers: any) => {
       console.log("printers", printers)
       this.printers = printers;
     });
@@ -32,15 +34,27 @@ export class PrintersComponent implements OnInit {
     );
   }
 
+  ngAfterViewInit(): void {
+    this.timeoutHandle = setTimeout(() => {
+      this.router.navigate(["/kiosk/slideshow/"]);
+    }, 60000);
+  }
+
+  ngOnDestroy(): void {
+    clearTimeout(this.timeoutHandle);
+  }
+
+
+
   print(printer: any) {
     let data = {
       file: this.filename,
       printer: printer.hostname
     };
 
-    this.http.post("http://172.18.5.196:5000/api/jobs",  data).subscribe(m => {
+    this.http.post(environment.api + "/api/jobs/",  data).subscribe(m => {
       console.log(m);
-      this.router.navigate(["/"]);
+      this.router.navigate(["/kiosk/success"]);
     });
   }
 

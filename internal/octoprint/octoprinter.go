@@ -6,6 +6,7 @@ import (
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/logging"
 )
 
+// A representation of a octoprint server
 type Octoprinter struct {
 	ctx      context.Context
 	hostname string

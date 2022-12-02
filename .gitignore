@@ -2,3 +2,4 @@ _temp/
 static/
 app.env
 webapp/src/assets/printer-sleeping.jpeg
+config.yml

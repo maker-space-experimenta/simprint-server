@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"strings"
 
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/configuration"
 	"github.com/maker-space-experimenta/printer-kiosk/internal/common/helper"
@@ -19,6 +20,7 @@ type SlicerHandler struct {
 func NewSlicerHandler(config configuration.Config) *SlicerHandler {
 	return &SlicerHandler{
 		config: config,
+		logger: logging.NewLogger(),
 	}
 }
 
@@ -42,7 +44,7 @@ func (m *SlicerHandler) PostSlicejob(w http.ResponseWriter, r *http.Request) {
 
 	m.logger.Infof("call PostSlicejob")
 
-	stlPath, _, err := helper.SaveFileFromForm(r, "file", path.Join(m.config.Files.TempDir, "stl"), "")
+	stlPath, filename, err := helper.SaveFileFromForm(r, "file", path.Join(m.config.Files.TempDir, "stl"), "")
 	if err != nil {
 		m.logger.Infof("FATAL: Could not decode and save stl file from request. Err %s", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -50,9 +52,11 @@ func (m *SlicerHandler) PostSlicejob(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	filename_gcode := strings.ReplaceAll(filename, ".stl", ".gcode")
+
 	config_path := "slicer-configs/config_pla_03mm_draft.ini"
 	scale := "30,30,30"
-	output := path.Join(m.config.Files.TempDir, "gcode", "foo.gcode")
+	output := path.Join(m.config.Files.TempDir, "gcode", filename_gcode)
 
 	args := []string{
 		"-g", stlPath,

@@ -4,7 +4,6 @@
     <input type="file" class="file-input" accept=".stl"
            (change)="onFileSelected($event)" #fileUpload>
     
-    
     <div class="file-upload"(click)="fileUpload.click()">
     
        {{fileName || "No file uploaded yet."}}

@@ -67,8 +67,8 @@ func (m *SlicerHandler) PostSlicejob(w http.ResponseWriter, r *http.Request) {
 		"--output", output,
 	}
 
-	m.logger.Infof("running prusa slicer")
-	cmd := exec.Command("prusa-slicer", args...)
+	m.logger.Infof("running prusa slicer %v", m.config.Slicer.Path)
+	cmd := exec.Command(m.config.Slicer.Path, args...)
 	cmd.Run()
 
 	err = os.Remove(stlPath)

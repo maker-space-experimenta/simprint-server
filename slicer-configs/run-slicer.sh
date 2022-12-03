@@ -1,6 +1,6 @@
 
-CONFIG_PATH=$(pwd)
-CONFIG_PATH="$CONFIG_PATH/config_pla_01mm_fine.ini"
+# CONFIG_PATH=$(pwd)
+CONFIG_PATH="./config_pla_01mm_fine.ini"
 
 prusa-slicer   \
     -g model.stl \

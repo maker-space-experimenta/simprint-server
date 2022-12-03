@@ -34,4 +34,8 @@ type Config struct {
 		ClientId     string `yaml:"client_id"`
 		ClientSecret string `yaml:"client_secret"`
 	} `yaml:"oauth"`
+
+	Slicer struct {
+		Path string `yaml:"path"`
+	} `yaml:"slicer"`
 }

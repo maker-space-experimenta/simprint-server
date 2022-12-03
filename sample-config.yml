@@ -19,3 +19,6 @@ printers:
 
 logging:
   level: info
+
+slicer:
+  path: /prusa/prusa-slicer

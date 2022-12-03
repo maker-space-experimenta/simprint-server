@@ -30,6 +30,7 @@ WORKDIR /app
 COPY --from=build_go /printer_service /app/printer_service
 COPY --from=build_webapp /app/dist /app/static
 COPY ./images /app/images
+COPY ./slicer-configs /app/slicer-configs
 RUN ls -la /app
 
 EXPOSE 5000

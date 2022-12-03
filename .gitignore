@@ -1,4 +1,5 @@
 _temp/
+_tmp/
 static/
 app.env
 webapp/src/assets/printer-sleeping.jpeg

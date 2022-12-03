@@ -52,19 +52,22 @@ func (m *SlicerHandler) PostSlicejob(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	m.logger.Infof("stl file safed to %v", stlPath)
+
 	filename_gcode := strings.ReplaceAll(filename, ".stl", ".gcode")
 
 	config_path := "slicer-configs/config_pla_03mm_draft.ini"
-	scale := "30,30,30"
+	// scale := "30,30,30"
 	output := path.Join(m.config.Files.TempDir, "gcode", filename_gcode)
 
 	args := []string{
 		"-g", stlPath,
 		"--load", config_path,
-		"--scale-to-fit", scale,
+		// "--scale-to-fit", scale,
 		"--output", output,
 	}
 
+	m.logger.Infof("running prusa slicer")
 	cmd := exec.Command("prusa-slicer", args...)
 	cmd.Run()
 

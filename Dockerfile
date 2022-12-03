@@ -32,6 +32,8 @@ COPY --from=build_webapp /app/dist /app/static
 COPY ./images /app/images
 COPY ./slicer-configs /app/slicer-configs
 RUN ls -la /app
+RUN apt update
+RUN apt install prusa-slicer -y
 
 EXPOSE 5000
 CMD [ "/app/printer_service" ]
